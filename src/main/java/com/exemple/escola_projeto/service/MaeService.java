@@ -1,0 +1,59 @@
+package com.exemple.escola_projeto.service;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.exemple.escola_projeto.model.Mae;
+import com.exemple.escola_projeto.repository.MaeRepository;
+
+@Service
+public class MaeService {
+
+    private final MaeRepository maeRepository;
+
+    public MaeService(MaeRepository maeRepository) {
+        this.maeRepository = maeRepository;
+    }
+
+    public List<Mae> listarTodas() {
+        return maeRepository.findAll();
+    }
+
+    public Mae buscarPorId(Long id) {
+        return maeRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Mãe não encontrada"));
+    }
+
+    public Mae salvar(Mae mae) {
+        return maeRepository.save(mae);
+    }
+
+    public Mae atualizar(Long id, Mae novaMae) {
+        return maeRepository.findById(id)
+                .map(mae -> {
+                    mae.setNomeMae(novaMae.getNomeMae());
+                    mae.setDataNascimentoMae(novaMae.getDataNascimentoMae());
+                    mae.setEnderecoMae(novaMae.getEnderecoMae());
+                    mae.setCepMae(novaMae.getCepMae());
+                    mae.setCpfMae(novaMae.getCpfMae());
+                    mae.setRgMae(novaMae.getRgMae());
+                    mae.setProfissaoMae(novaMae.getProfissaoMae());
+                    mae.setTelefoneMae(novaMae.getTelefoneMae());
+                    mae.setEmailMae(novaMae.getEmailMae());
+                    mae.setLocalTrabalhoMae(novaMae.getLocalTrabalhoMae());
+                    mae.setTelefoneTrabalhoMae(novaMae.getTelefoneTrabalhoMae());
+                    return maeRepository.save(mae);
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Mãe não encontrada"));
+    }
+
+    public void deletar(Long id) {
+        if (!maeRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Mãe não encontrada");
+        }
+        maeRepository.deleteById(id);
+    }
+}

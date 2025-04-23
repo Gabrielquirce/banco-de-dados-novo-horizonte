@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.exemple.escola_projeto.dto.MaeDto;
 import com.exemple.escola_projeto.model.Mae;
 import com.exemple.escola_projeto.repository.MaeRepository;
 
@@ -25,6 +26,12 @@ public class MaeService {
     public Mae buscarPorId(Long id) {
         return maeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Mãe não encontrada"));
+    }
+
+    public MaeDto buscarMaeDto(Long id) {
+        Mae mae = maeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Mãe não encontrada"));
+        return maeDto(mae);
     }
 
     public Mae salvar(Mae mae) {
@@ -55,5 +62,19 @@ public class MaeService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Mãe não encontrada");
         }
         maeRepository.deleteById(id);
+    }
+
+    private MaeDto maeDto(Mae mae) {
+        return new MaeDto(
+                mae.getIdMae(),
+                mae.getNomeMae(),
+                mae.getEnderecoMae(),
+                mae.getCpfMae(),
+                mae.getRgMae(),
+                mae.getTelefoneMae(),
+                mae.getEmailMae(),
+                mae.getLocalTrabalhoMae(),
+                mae.getTelefoneTrabalhoMae()
+        );
     }
 }

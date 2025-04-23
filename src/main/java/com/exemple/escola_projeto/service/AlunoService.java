@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.exemple.escola_projeto.dto.AlunoDto;
 import com.exemple.escola_projeto.model.Aluno;
 import com.exemple.escola_projeto.repository.AlunoRepository;
 
@@ -25,6 +26,12 @@ public class AlunoService {
         return alunoRepository.findById(id);
     }
 
+    public AlunoDto buscarAlunoDto(Long id) {
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+        return alunoDto(aluno);
+    }
+
     public Aluno salvar(Aluno aluno) {
         return alunoRepository.save(aluno);
     }
@@ -35,25 +42,37 @@ public class AlunoService {
 
     public Aluno atualizar(Long id, Aluno novoAluno) {
         return alunoRepository.findById(id)
-            .map(aluno -> {
-                aluno.setNome(novoAluno.getNome());
-                aluno.setIdade(novoAluno.getIdade());
-                aluno.setDataNascimento(novoAluno.getDataNascimento());
-                aluno.setNaturalidade(novoAluno.getNaturalidade());
-                aluno.setNacionalidade(novoAluno.getNacionalidade());
-                aluno.setSexo(novoAluno.getSexo());
-                aluno.setCpf(novoAluno.getCpf());
-                aluno.setRg(novoAluno.getRg());
-                aluno.setAnoLetivo(novoAluno.getAnoLetivo());
-                aluno.setTermo(novoAluno.getTermo());
-                aluno.setFolha(novoAluno.getFolha());
-                aluno.setLivro(novoAluno.getLivro());
-                aluno.setMatricula(novoAluno.getMatricula());
-                aluno.setTurno(novoAluno.getTurno());
-                aluno.setTipoSanguineo(novoAluno.getTipoSanguineo());
-                aluno.setRaca(novoAluno.getRaca());
-                aluno.setResideCom(novoAluno.getResideCom());
-                return alunoRepository.save(aluno);
-            }).orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+                .map(aluno -> {
+                    aluno.setNome(novoAluno.getNome());
+                    aluno.setIdade(novoAluno.getIdade());
+                    aluno.setDataNascimento(novoAluno.getDataNascimento());
+                    aluno.setNaturalidade(novoAluno.getNaturalidade());
+                    aluno.setNacionalidade(novoAluno.getNacionalidade());
+                    aluno.setSexo(novoAluno.getSexo());
+                    aluno.setCpf(novoAluno.getCpf());
+                    aluno.setRg(novoAluno.getRg());
+                    aluno.setAnoLetivo(novoAluno.getAnoLetivo());
+                    aluno.setTermo(novoAluno.getTermo());
+                    aluno.setFolha(novoAluno.getFolha());
+                    aluno.setLivro(novoAluno.getLivro());
+                    aluno.setMatricula(novoAluno.getMatricula());
+                    aluno.setTurno(novoAluno.getTurno());
+                    aluno.setTipoSanguineo(novoAluno.getTipoSanguineo());
+                    aluno.setRaca(novoAluno.getRaca());
+                    aluno.setResideCom(novoAluno.getResideCom());
+                    return alunoRepository.save(aluno);
+                }).orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+    }
+
+    private AlunoDto alunoDto(Aluno aluno) {
+        return new AlunoDto(
+                aluno.getId(),
+                aluno.getNome(),
+                aluno.getCpf(),
+                aluno.getRg(),
+                aluno.getTurno(),
+                aluno.getTipoSanguineo(),
+                aluno.getResideCom()
+        );
     }
 }
